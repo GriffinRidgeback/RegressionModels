@@ -1,0 +1,96 @@
+---
+title: "Multivariate Regression Analysis of mtcars Dataset"
+author: "Kevin E. D'Elia"
+date: "June 24, 2016"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Executive Summary
+
+Fuel economy is arguably the most important criteria for car owners.  The purpose of this project is to use multivariate linear regression to analyze the **mtcars** dataset in an effort to understand the relationship between a set of independent predictor variables (_regressors_) and miles per gallon (_response_).  A brief exploratory data analysis will be performed, followed by model selection and then coefficient interpretation.  The analysis will conclude by providing answers to the following two questions:
+
+   * Is an automatic or manual transmission better for MPG?
+   * What is the quantitative difference in MPG between automatic and manual transmissions?
+   
+# Exploratory Data Analysis
+
+The **mtcars** dataset, available in the default R environment, is a `r nrow(mtcars)` by `r ncol(mtcars)` matrix, information about which can be obtained via _?mtcars_.  The `r ncol(mtcars)` variables are: **`r names(mtcars)`**.  Since the analysis is looking at MPG differences between the two transmission types, it makes sense to split the dataset into one for automatic and another for manual transmission.
+
+```{r split.dataset}
+split.data <- split(mtcars, as.factor(mtcars$am))
+auto.trans <- split.data$`0`
+manual.trans <- split.data$`1`
+```
+
+The range for MPG in cars with automatic transmission is **`r range(auto.trans$mpg)`** and for manual it is **`r range(manual.trans$mpg)`**, so it would appear that manual transmission offers better fuel economy.  Scatterplots in **_Figure 1_** show a downward trend for MPG against a single regressor for **both** automatic and manual transmissions.  For automatic transmission, the linear line of best fit appears to have a slightly lower slope, but the loess line is more skewed.  Applying linear regression techniques will help confirm this preliminary interpretation.
+
+# Model Selection and Fitting
+
+Choosing a model depends heavily on selecting the most meaningful variables for analysis to avoid over- or under-fitting the model.  As a first step, simple linear regression will be applied, using **wt** (_weight_) as the regressor, since vehicular weight is a key contributor to fuel consumption:  **_lm(mpg ~ wt, data = auto.trans)_** and **_lm(mpg ~ wt, data = manual.trans)_**.  The formulae used result in a model of the form **Y = $\beta_0$ + $\beta_1$X**.
+
+```{r slr, echo=FALSE}
+auto.fit.wt <- lm(formula = mpg ~ wt, data = auto.trans)
+manual.fit.wt <- lm(formula = mpg ~ wt, data = manual.trans)
+```
+
+Of the remaining variables, the next best choice would be **hp** (_horsepower_).  The formula is modified thusly for both datasets: **_mpg ~ wt + hp_**, resulting in a first-order model of the form **Y = $\beta_0$ + $\beta_1X_1$ + $\beta_2X_2$**.
+
+Lastly, an interaction formula is used:  **_mpg ~ wt:hp_**, resulting in a first-order interaction model of the form **Y = $\beta_0$ + $\beta_1X_1X_2$**.
+
+```{r mvlr, echo=FALSE}
+auto.fit.wt.hp <- lm(formula = mpg ~ wt + hp, data = auto.trans)
+manual.fit.wt.hp <- lm(formula = mpg ~ wt + hp, data = manual.trans)
+auto.fit.wt_hp <- lm(formula = mpg ~ wt:hp, data = auto.trans)
+manual.fit.wt_hp <- lm(formula = mpg ~ wt:hp, data = manual.trans)
+```
+
+# Coefficient Interpretation
+
+$\hat{\alpha}$
+$\beta_j$ is the regression coefficient for the _jth_ predictor (slope representing the change in Y for a unit change in X)
+
+# Residuals and Diagnostics
+# Conclusions
+   Did the student answer the questions of interest or detail why the question(s) is (are) not answerable? 
+   “Is an automatic or manual transmission better for MPG”
+    "Quantify the MPG difference between automatic and manual transmissions" 
+    Did the student quantify the uncertainty in their conclusions and/or perform an inference correctly?
+    
+    
+    
+    
+    
+    
+    
+    
+    
+# Appendix of Tables and Figures
+```{r eda_auto, echo=FALSE}
+library(car)
+scatterplot(mpg ~ wt, data = auto.trans, spread = FALSE, smoother.args=list(lty=2), pch=19, main="Automatic", xlab="Wt", ylab = "mgp", cex.main = .9, font.main = 3, cex.axis = .6, cex.lab = .7)
+```
+
+***
+
+```{r eda_manual, echo=FALSE}
+library(car)
+scatterplot(mpg ~ wt, data = manual.trans, spread = FALSE, smoother.args=list(lty=2), pch=19, main="Manual", xlab="Wt", ylab = "mgp", cex.main = .9, font.main = 3, cex.axis = .6, cex.lab = .7)
+```
+
+**_Figure 1_**: MPG comparison for automatic and manual transmissions, conditioned by weight
+
+```{r coefficients, echo=FALSE}
+coefficients(auto.fit.wt)
+coefficients(manual.fit.wt)
+coefficients(auto.fit.wt.hp)
+coefficients(manual.fit.wt.hp)
+coefficients(auto.fit.wt_hp)
+coefficients(manual.fit.wt_hp)
+```
+
+Did the student do a residual plot and some diagnostics?
+Appendix can be no more than three pages
