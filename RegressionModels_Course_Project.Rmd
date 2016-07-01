@@ -50,14 +50,13 @@ manual.fit.wt_hp <- lm(formula = mpg ~ wt + hp + wt:hp, data = manual.trans)
 
 # Coefficient Interpretation
 
-Having fit several models, which of those models provides the best fit and, subsequently, the best predictor?  To answer that question, the **$R^{2}$** statistics for all three models are provided in **Table 1**.
+Having fit several models, which of those models provides the best fit and, subsequently, the best predictor?  To answer that question, the **$R^{2}$** (coefficient of determination) statistics for all three models are provided in **Table 1**.  With the exception of the first entry, all 3 models explain between 77% and 87% of the total variation in MPG, with the interactive model being the best estimator.  However, an examination of the coefficient p-values for all three models resulted in a determination that only formula _mpg ~ wt_ had any signficant regressors ($p_A$ = 0.0001246 and $p_M$ = 0.0000169).
 
-The findings of the graphs are supported by analysis of the model coefficients for the various selected regressors.  In all cases, the coefficients for weight are negative, indicating an inverse relationship between weight and fuel economy (see _Table 1 - 3_).  So, an increase in 1000 lbs of weight will have a negative $\beta_1$ influence.  The effects are mitigated somewhat by including an additional regressor and even more so when fiting a model with interaction terms.  However, in all cases, the decrease in MPG is more severely seen in the case of vehicles with manual transmissions.
-
-$\hat{\alpha}$
-$\beta_j$ is the regression coefficient for the _jth_ predictor (slope representing the change in Y for a unit change in X)
+The findings of the graphs are supported by analysis of the model coefficients for the various selected regressors.  In all cases, the coefficients for weight are negative, indicating an inverse relationship between weight and fuel economy (see _Tables 2 - 4_).  So, an increase in 1000 lbs of weight will have a negative $\beta_1$ influence.  The effects are mitigated somewhat by including an additional regressor and even more so when fiting a model with interaction terms.  However, in all cases, the decrease in MPG is more severely seen in the case of vehicles with manual transmissions.
 
 # Residuals and Diagnostics
+A plot of the residuals, shown in **Figure 2**, is a graphical, rather than tabular, evaluation of model fit.  From the plot of variations in MPG by car weight, there are three distinct patterns, two at either end and the more significant central cluster.  The randomness of these patterns is reinforced by the second plot of residuals against weight.  The data is fairly symmetrical, indicating that **$\mathbf{E[e_i]}$ = 0**
+
 # Conclusions
    Did the student answer the questions of interest or detail why the question(s) is (are) not answerable? 
    “Is an automatic or manual transmission better for MPG”
@@ -67,47 +66,10 @@ $\beta_j$ is the regression coefficient for the _jth_ predictor (slope represent
 In terms of ranges of gas mileage, manual transmissions far exceeds the numbers for automatic.  But in terms of how other factors influence gas mileage, it has been shown that automatic transmissions are less affected by variables such as weight and horsepower than manual one.
 
 Give a quantitative example here:  formula
-AAKLFDJA
-AFDSKLJAKLDF
-ASFJALKDSFJALSK
-AFJAKLFJALDSKFA
-JAKLDSJFLAKFJAS
-AFADSKLFJA
-AFJDAKLDSJALKSD
-AJFAKLJDFLAKDSJFADSKL
-AJFDKLASFJASL;DFA
 
-DASADFA
-AFS
+\newpage
 
-AFDASA
-
-AFADSFA
-
-ASDFADSF
-
-
-AFDASAF
-
-
-ASFDADS
-
-
-
-***
-
-***
-
-***
-
-***
-
-***
-
-***
-
-
-### Appendix of Tables and Figures
+## Appendix of Tables and Figures
 
 **_Figure 1_**: MPG comparison for automatic and manual transmissions, conditioned by weight
 
@@ -123,45 +85,40 @@ library(car)
 scatterplot(mpg ~ wt, data = manual.trans, boxplots = FALSE, spread = FALSE, smoother.args=list(lty=2), pch=19, main="Manual Transmission", xlab="Weight (1000 lbs)", ylab = "MPG", cex = .5, cex.main = .8, font.main = 3, cex.axis = .5, cex.lab = .6)
 ```
 
-**_Table 1_**: Coefficients for automatic and manual transmissions, regressed by weight
+**_Figure 2_**: Residuals for **_lm(mpg ~ wt)_**
 
-```{r coefficients_slr, echo=FALSE}
-library(knitr)
-Transmission <- c("Automatic","Manual")
-Intercept <- c(round(summary(auto.fit.wt)$coef[1], 3), round(summary(manual.fit.wt)$coef[1], 3))
-Weight <- c(round(summary(auto.fit.wt)$coef[2], 3), round(summary(manual.fit.wt)$coef[2], 3))
-theTable <- data.frame(Transmission, Intercept, Weight)
-rownames(theTable) <- NULL
-kable(theTable)
+```{r residuals, echo=FALSE}
+# get data
+y <- mtcars$mpg; x <- mtcars$wt; n <-length(y)
+# linear regression
+fit <-lm(y ~ x)
+# calculate residual
+e <-resid(fit)
+# calculate predicted values
+yhat <-predict(fit)
+# create 1 x 2 panel plot
+par(mfrow=c(1, 2))
+# plot residuals on regression line
+plot(x, y, xlab = "Weight", ylab = "MPG", bg = "lightblue",col = "black", cex = 2, pch = 21,frame = FALSE,main = "Residual on Regression Line")
+# draw linear regression line
+abline(fit, lwd = 2)
+# draw red lines from data points to regression line
+for (i in 1 : n)
+        {
+        lines(c(x[i], x[i]),c(y[i], yhat[i]), col = "orange" , lwd = 2)
+        }
+# plot residual vs x
+plot(x, e, xlab = "Weight", ylab = "MPG", bg = "lightblue",col = "black", cex = 2, pch = 21,frame = FALSE,main = "Residual vs X")
+# draw horizontal line
+abline(h = 0, lwd = 2)
+# draw red lines from residual to x axis
+for (i in 1 : n)
+        {
+        lines(c(x[i], x[i]),c(e[i], 0), col = "orange" , lwd = 2)
+        }
 ```
 
-**_Table 2_**: Coefficients for automatic and manual transmissions, regressed by weight and horsepower
-
-```{r coefficients_mlr, echo=FALSE}
-library(knitr)
-Transmission <- c("Automatic","Manual")
-Intercept <- c(round(summary(auto.fit.wt.hp)$coef[1], 3), round(summary(manual.fit.wt.hp)$coef[1], 3))
-Weight <- c(round(summary(auto.fit.wt.hp)$coef[2], 3), round(summary(manual.fit.wt.hp)$coef[2], 3))
-Horsepower <- c(round(summary(auto.fit.wt.hp)$coef[3], 3), round(summary(manual.fit.wt.hp)$coef[3], 3))
-theTable <- data.frame(Transmission, Intercept, Weight, Horsepower)
-rownames(theTable) <- NULL
-kable(theTable)
-```
-
-**_Table 3_**: Coefficients for automatic and manual transmissions, regressed by weight and horsepower, interactively
-
-```{r coefficients_interaction, echo=FALSE}
-library(knitr)
-Transmission <- c("Automatic","Manual")
-Intercept <- c(round(summary(auto.fit.wt_hp)$coef[1], 3), round(summary(manual.fit.wt_hp)$coef[1], 3))
-Weight <- c(round(summary(auto.fit.wt_hp)$coef[2], 3), round(summary(manual.fit.wt_hp)$coef[2], 3))
-Horsepower <- c(round(summary(auto.fit.wt_hp)$coef[3], 3), round(summary(manual.fit.wt_hp)$coef[3], 3))
-HorsepowerByWeight <- c(round(summary(auto.fit.wt_hp)$coef[4], 3), round(summary(manual.fit.wt_hp)$coef[4], 3))
-theTable <- data.frame(Transmission, Intercept, Weight, Horsepower, HorsepowerByWeight)
-rownames(theTable) <- NULL
-kable(theTable)
-```
-
+\newpage
 
 **_Table 1_**: $R^{2}$ statistics for all models
 
@@ -175,8 +132,43 @@ theTable <- data.frame(Transmission, Weight, WtAndHp, WtByHp)
 rownames(theTable) <- NULL
 colnames(theTable) <- c("Transmission", "~wt", "~wt + hp", "~wt + hp + wt:hp")
 kable(theTable)
-
 ```
 
-Did the student do a residual plot and some diagnostics?
-Appendix can be no more than three pages
+**_Table 2_**: Coefficients regressed by weight
+
+```{r coefficients_slr, echo=FALSE}
+library(knitr)
+Transmission <- c("Automatic","Manual")
+Intercept <- c(round(summary(auto.fit.wt)$coef[1], 3), round(summary(manual.fit.wt)$coef[1], 3))
+Weight <- c(round(summary(auto.fit.wt)$coef[2], 3), round(summary(manual.fit.wt)$coef[2], 3))
+theTable <- data.frame(Transmission, Intercept, Weight)
+rownames(theTable) <- NULL
+kable(theTable)
+```
+
+**_Table 3_**: Coefficients regressed by weight and horsepower
+
+```{r coefficients_mlr, echo=FALSE}
+library(knitr)
+Transmission <- c("Automatic","Manual")
+Intercept <- c(round(summary(auto.fit.wt.hp)$coef[1], 3), round(summary(manual.fit.wt.hp)$coef[1], 3))
+Weight <- c(round(summary(auto.fit.wt.hp)$coef[2], 3), round(summary(manual.fit.wt.hp)$coef[2], 3))
+Horsepower <- c(round(summary(auto.fit.wt.hp)$coef[3], 3), round(summary(manual.fit.wt.hp)$coef[3], 3))
+theTable <- data.frame(Transmission, Intercept, Weight, Horsepower)
+rownames(theTable) <- NULL
+kable(theTable)
+```
+
+**_Table 4_**: Coefficients regressed by weight and horsepower, interactively
+
+```{r coefficients_interaction, echo=FALSE}
+library(knitr)
+Transmission <- c("Automatic","Manual")
+Intercept <- c(round(summary(auto.fit.wt_hp)$coef[1], 3), round(summary(manual.fit.wt_hp)$coef[1], 3))
+Weight <- c(round(summary(auto.fit.wt_hp)$coef[2], 3), round(summary(manual.fit.wt_hp)$coef[2], 3))
+Horsepower <- c(round(summary(auto.fit.wt_hp)$coef[3], 3), round(summary(manual.fit.wt_hp)$coef[3], 3))
+HorsepowerByWeight <- c(round(summary(auto.fit.wt_hp)$coef[4], 3), round(summary(manual.fit.wt_hp)$coef[4], 3))
+theTable <- data.frame(Transmission, Intercept, Weight, Horsepower, HorsepowerByWeight)
+rownames(theTable) <- NULL
+kable(theTable)
+```
