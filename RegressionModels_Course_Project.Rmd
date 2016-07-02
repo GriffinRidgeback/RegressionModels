@@ -1,5 +1,5 @@
 ---
-title: "Multivariate Regression Analysis of mtcars Dataset"
+title: "Linear Regression Analysis of mtcars Dataset"
 author: "Kevin E. D'Elia"
 date: "July 2, 2016"
 output: pdf_document
@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Executive Summary
 
-Fuel economy is arguably the most important criteria for car owners.  The purpose of this project is to use multivariate linear regression to analyze the **mtcars** dataset in an effort to understand the relationship between a set of independent predictor variables (_regressors_) and miles per gallon (_response_).  A brief exploratory data analysis will be performed, followed by model selection and then coefficient interpretation.  The analysis will conclude by providing answers to the following two questions:
+Fuel economy is arguably the most important criteria for car owners.  The purpose of this project is to use linear regression to analyze the **mtcars** dataset in an effort to understand the relationship between a set of independent predictor variables (_regressors_) and miles per gallon (_response_).  A brief exploratory data analysis will be performed, followed by model selection, coefficient interpretation, and then analysis of residuals and diagnostics.  The analysis will conclude by providing answers to the following two questions:
 
    * Is an automatic or manual transmission better for MPG?
    * What is the quantitative difference in MPG between automatic and manual transmissions?
@@ -26,7 +26,7 @@ auto.trans <- split.data$`0`
 manual.trans <- split.data$`1`
 ```
 
-The range for MPG in cars with automatic transmission is **`r range(auto.trans$mpg)`** and for manual it is **`r range(manual.trans$mpg)`**, so it would appear that manual transmission offers better fuel economy.  Scatterplots in **_Figure 1_** show a downward trend for MPG against a single regressor for **both** automatic and manual transmissions.  For automatic transmission, the linear line of best fit appears to have a slightly lower slope, but the loess line is more skewed.  Applying linear regression techniques will help confirm this preliminary interpretation.
+The range for MPG in cars with automatic transmission is **`r range(auto.trans$mpg)[1]`** - **`r range(auto.trans$mpg)[2]`** and for manual it is **`r range(manual.trans$mpg)[1]`** - **`r range(manual.trans$mpg)[2]`**, so it would appear that manual transmission offers better fuel economy.  Scatterplots in **_Figure 1_** show a downward trend for MPG against a single regressor for **both** automatic and manual transmissions.  For automatic transmission, the linear line of best fit appears to have a slightly lower slope, but the loess line is more skewed.  Applying linear regression techniques will help confirm this preliminary interpretation.
 
 # Model Selection and Fitting
 
