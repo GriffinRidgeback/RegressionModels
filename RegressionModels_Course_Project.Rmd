@@ -1,7 +1,7 @@
 ---
 title: "Multivariate Regression Analysis of mtcars Dataset"
 author: "Kevin E. D'Elia"
-date: "June 24, 2016"
+date: "July 2, 2016"
 output: pdf_document
 ---
 
@@ -37,7 +37,7 @@ auto.fit.wt <- lm(formula = mpg ~ wt, data = auto.trans)
 manual.fit.wt <- lm(formula = mpg ~ wt, data = manual.trans)
 ```
 
-Of the remaining variables, the next best choice would be **hp** (_horsepower_).  The formula is modified thusly for both datasets: **_mpg ~ wt + hp_**, resulting in a first-order model of the form **Y = $\beta_0$ + $\beta_1X_1$ + $\beta_2X_2$**.
+Of the remaining variables, the next best choice would be **hp** (_horsepower_).  The formula is modified thus for both datasets: **_mpg ~ wt + hp_**, resulting in a first-order model of the form **Y = $\beta_0$ + $\beta_1X_1$ + $\beta_2X_2$**.
 
 Lastly, an interaction formula is used:  **_mpg ~ wt + hp + wt:hp_**, resulting in a first-order interaction model of the form **Y = $\beta_0$ + $\beta_1X_1$ + $\beta_2X_2$ + $\beta_3X_1X_2$**.
 
@@ -50,9 +50,9 @@ manual.fit.wt_hp <- lm(formula = mpg ~ wt + hp + wt:hp, data = manual.trans)
 
 # Coefficient Interpretation
 
-The findings of the graphs are supported by analysis of the model coefficients for the various selected regressors.  In all cases, the coefficients for weight are negative, indicating an inverse relationship between weight and fuel economy (see **_Tables 1 - 3_**).  So, an increase in 1,000 lbs. of weight will have a negative $\beta_1$ influence.  The effects are mitigated somewhat by including an additional regressor and even more so when fiting a model with interaction terms.  However, in all cases, the decrease in MPG is more severely seen in the case of vehicles with manual transmissions.
+The findings of the graphs are supported by analysis of the model coefficients for the various selected regressors.  In all cases, the coefficients for weight are negative, indicating an inverse relationship between weight and fuel economy (see **_Tables 1 - 3_**).  So, an increase in 1,000 lbs. of weight will have a negative $\beta_1$ influence.  The effects are mitigated somewhat by including an additional regressor and even more so when fitting a model with interaction terms.  However, in all cases, the decrease in MPG is more severely seen in the case of vehicles with manual transmissions.
 
-Having fit several models, which of those models provides the best fit and, subsequently, the best predictor?  To answer that question, the **$R^{2}$** (coefficient of determination) statistics for all three models are provided in **Table 4**.  With the exception of the first entry, all 3 models explain between 77% and 87% of the total variation in MPG, with the interactive model being the best estimator.  However, an examination of the coefficient p-values for all three models resulted in a determination that only formula _mpg ~ wt_ had any signficant regressors ($p_A$ = 0.0001246 and $p_M$ = 0.0000169).  That model will be used to evaluate the residuals.
+Having fit several models, which of those models provides the best fit and, subsequently, the best predictor?  To answer that question, the **$R^{2}$** (coefficient of determination) statistics for all three models are provided in **Table 4**.  With the exception of the first entry, all 3 models explain between 77% and 87% of the total variation in MPG, with the interactive model being the best estimator.  However, an examination of the coefficient p-values for all three models resulted in a determination that only formula _mpg ~ wt_ had any significant regressors ($p_A$ = 0.0001246 and $p_M$ = 0.0000169).  That model will be used to evaluate the residuals.
 
 # Residuals and Diagnostics
 ```{r fit_models, echo=FALSE}
